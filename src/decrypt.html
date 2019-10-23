@@ -1,0 +1,74 @@
+<script type="text/javascript">
+  RED.nodes.registerType('decrypt',{
+      category: 'signature',
+      color: '#a6bbcf',
+      defaults: {
+          name: {value:""},
+          key: {value:""}
+      },
+      inputs:1,
+      outputs:1,
+      icon: "file.png",
+      label: function() {
+          return this.name||"decrypt";
+      },
+      oneditprepare: function() {
+        var that = this;
+
+        this.editor = RED.editor.createEditor({
+            id: 'node-input-key-editor',
+            mode: 'ace/mode/text',
+            value: $("#node-input-key").val(),
+            globals: {
+                msg:true,
+                context:true,
+                RED: true,
+                util: true,
+                flow: true,
+                global: true,
+                console: true,
+                Buffer: true,
+                setTimeout: true,
+                clearTimeout: true,
+                setInterval: true,
+                clearInterval: true
+            }
+        });
+        RED.library.create({
+            url:"functions", // where to get the data from
+            type:"key", // the type of object the library is for
+            editor:this.editor, // the field name the main text body goes to
+            mode:"ace/mode/text",
+            fields:['name','outputs']
+        });
+        this.editor.focus();
+    },
+    oneditsave: function() {
+        var annot = this.editor.getSession().getAnnotations();
+        this.noerr = 0;
+        $("#node-input-noerr").val(0);
+        $("#node-input-key").val(this.editor.getValue());
+        this.editor.destroy();
+        delete this.editor;
+    },
+  });
+</script>
+
+<script type="text/x-red" data-template-name="decrypt">
+  <div class="form-row">
+    <label for="node-input-name"><i class="fa fa-tag"></i> Name</label>
+    <input type="text" id="node-input-name" placeholder="Name">
+  </div>
+  <div class="form-row" style="margin-bottom: 0px;">
+      <label for="node-input-key"><i class="fa fa-wrench"></i> Public Key</label>
+      <input type="hidden" id="node-input-key" autofocus="autofocus">
+      <input type="hidden" id="node-input-noerr">
+  </div>
+  <div class="form-row node-text-editor-row">
+    <div style="height: 250px; min-height:150px;" class="node-text-editor" id="node-input-key-editor" ></div>
+  </div>
+</script>
+
+<script type="text/x-red" data-help-name="decrypt">
+  <p>A simple node that converts the message payloads into all decrypt characters</p>
+</script>
