@@ -1,5 +1,5 @@
 {
-  "name": "node-red-contrib-signature",
+  "name": "node-red-contrib-crypt",
   "version": "1.0.0",
   "license": "MIT",
   "scripts": {
